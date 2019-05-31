@@ -4,17 +4,7 @@ using UnityEngine;
 
 public class MouseFollower : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    List<List<string>> test;
 
     Vector3 screenPoint;
     Vector3 offset;
