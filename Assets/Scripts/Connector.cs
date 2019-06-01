@@ -28,12 +28,15 @@ public class Connector : MonoBehaviour
     [SerializeField] float TopBorder;
     [SerializeField] float BottomBorder;
 
+    public string CurrentlyConnectedTo;
+
     Vector3 screenPoint;
     Vector3 offset;
     Vector3 cursorScreenPoint;
     Vector3 cursorPosition;
 
     Vector3 goalRotation;
+
 
     private void OnMouseDown()
     {
@@ -79,5 +82,7 @@ public class Connector : MonoBehaviour
 
         var positionString = rows[(int)transform.position.y] + columns[(int)transform.position.x];
         Debug.Log(positionString + " " + transform.position);
+
+        CurrentlyConnectedTo = positionString;
     }
 }
