@@ -53,15 +53,15 @@ public class ReceiverText : MonoBehaviour
         {
             await Task.Delay(500);
             if (!writingDots) return;
-            textComponent.text = ".";
+            textComponent.text = "  .";
 
             await Task.Delay(500);
             if (!writingDots) return;
-            textComponent.text = "..";
+            textComponent.text = "  ..";
 
             await Task.Delay(500);
             if (!writingDots) return;
-            textComponent.text = "...";
+            textComponent.text = "  ...";
         }
     }
 }

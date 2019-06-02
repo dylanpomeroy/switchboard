@@ -70,7 +70,7 @@ public class Connector : MonoBehaviour
         rigidBodyComponent = GetComponent<Rigidbody>();
 
         transform.position = Source.position;
-        transform.rotation = Quaternion.Euler(90, 0, 0);
+        transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void OnMouseDown()
@@ -96,15 +96,15 @@ public class Connector : MonoBehaviour
             Mathf.Max(Mathf.Min(cursorPosition.x, LeftBorder), RightBorder),
             Mathf.Max(Mathf.Min(cursorPosition.y, TopBorder), BottomBorder),
             cursorPosition.z);
-        transform.position = cursorPosition;
+        transform.position = cursorPosition + new Vector3(0, 0, 1);
 
-        if (transform.localPosition.y < 0)
+        if (transform.localPosition.y < 0.3f)
         {
-            transform.rotation = Quaternion.Euler(90, 0, 0);
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
         else
         {
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            transform.rotation = Quaternion.Euler(-90, 0, 0);
         }
     }
 
@@ -121,7 +121,7 @@ public class Connector : MonoBehaviour
         }
         else
         {
-            roundedPosition = new Vector3(roundedPosition.x, roundedPosition.y, 0);
+            roundedPosition = new Vector3(roundedPosition.x, roundedPosition.y, 0.5f);
         }
 
         if (roundedPosition != Source.position)
@@ -136,6 +136,10 @@ public class Connector : MonoBehaviour
             {
                 CurrentlyConnectedTo = Manager.callersDictionary[positionString];
             }
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
         }
 
         transform.position = roundedPosition;
