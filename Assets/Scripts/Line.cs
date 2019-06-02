@@ -81,21 +81,12 @@ public class Line : MonoBehaviour
                     Manager.TotalScore -= 5;
                     CurrentConnectionState = ConnectionState.CallCleanup;
                 }
-                else
-                {
-                    if ((connectedCaller0 != null & connectedCaller1 != null)
+                else if ((connectedCaller0 != null & connectedCaller1 != null)
                     && ((connectedCaller0IsCaller && connectedCaller0.RequestedReceiver == connectedCaller1)
                         || (connectedCaller1IsCaller && connectedCaller1.RequestedReceiver == connectedCaller0)))
-                    {
-                        Debug.Log($"Both callers connected. Moving to ReceiverConnected state.");
-                        CurrentConnectionState = ConnectionState.ReceiverConnected;
-                    }
-                    else
-                    {
-                        var requestedCaller = connectedCaller0IsCaller ? connectedCaller0.RequestedReceiver.gameObject.name
-                            : connectedCaller1.RequestedReceiver.gameObject.name;
-                                Debug.Log($"Requested caller at {requestedCaller}");
-                    }
+                {
+                    Debug.Log($"Both callers connected. Moving to ReceiverConnected state.");
+                    CurrentConnectionState = ConnectionState.ReceiverConnected;
                 }
 
                 break;

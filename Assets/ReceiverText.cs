@@ -52,17 +52,14 @@ public class ReceiverText : MonoBehaviour
         while (true)
         {
             await Task.Delay(500);
-            Debug.Log($"About to write one dot. writingDots is {writingDots}");
             if (!writingDots) return;
             textComponent.text = ".";
 
             await Task.Delay(500);
-            Debug.Log($"About to write one dot. writingDots is {writingDots}");
             if (!writingDots) return;
             textComponent.text = "..";
 
             await Task.Delay(500);
-            Debug.Log($"About to write one dot. writingDots is {writingDots}");
             if (!writingDots) return;
             textComponent.text = "...";
         }

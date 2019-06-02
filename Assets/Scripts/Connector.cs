@@ -68,6 +68,9 @@ public class Connector : MonoBehaviour
     private void Start()
     {
         rigidBodyComponent = GetComponent<Rigidbody>();
+
+        transform.position = Source.position;
+        transform.rotation = Quaternion.Euler(90, 0, 0);
     }
 
     private void OnMouseDown()
@@ -82,11 +85,6 @@ public class Connector : MonoBehaviour
 
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
-
-        if (transform.position == Source.position)
-        {
-            transform.Rotate(new Vector3(-90, 0, 0));
-        }
     }
     
     private void OnMouseDrag()
