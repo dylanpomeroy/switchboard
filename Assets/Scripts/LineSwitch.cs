@@ -4,16 +4,30 @@ using UnityEngine;
 
 public class LineSwitch : MonoBehaviour
 {
-    public bool onState;
+    public bool OnState
+    {
+        get
+        {
+            return onState;
+        }
+        set
+        {
+            onState = value;
+
+
+        }
+    }
+
+    private bool onState;
 
     private void OnMouseDown()
     {
-        onState = !onState;
+        OnState = !OnState;
     }
 
     private void Update()
     {
-        if (onState)
+        if (OnState)
         {
             transform.localRotation = Quaternion.Euler(-20, 0, 0);
         }

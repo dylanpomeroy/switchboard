@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static Line;
 
 public class Connector : MonoBehaviour
 {
@@ -23,12 +24,38 @@ public class Connector : MonoBehaviour
     };
 
     [SerializeField] Transform Source;
+    [SerializeField] Line LineParent;
     [SerializeField] float LeftBorder;
     [SerializeField] float RightBorder;
     [SerializeField] float TopBorder;
     [SerializeField] float BottomBorder;
 
-    public string CurrentlyConnectedTo;
+    public Caller CurrentlyConnectedTo
+    {
+        get
+        {
+            return currentlyConnectedTo;
+        }
+        set
+        {
+            if (value != null)
+            {
+                Debug.Log($"Line connected to caller: {currentlyConnectedTo}");
+                value.ConnectedLine = LineParent;
+            }
+            else
+            {
+                currentlyConnectedTo.CallIncoming = false;
+                currentlyConnectedTo.ConnectedLine = null;
+                currentlyConnectedTo.RequestedReceiver = null;
+            }
+            
+
+            currentlyConnectedTo = value;
+        }
+    }
+
+    private Caller currentlyConnectedTo;
 
     Vector3 screenPoint;
     Vector3 offset;
@@ -37,9 +64,14 @@ public class Connector : MonoBehaviour
 
     Vector3 goalRotation;
 
-
     private void OnMouseDown()
     {
+        if (CurrentlyConnectedTo != null)
+        {
+            CurrentlyConnectedTo.ConnectedLine = null;
+            CurrentlyConnectedTo = null;
+        }
+
         screenPoint = Camera.main.WorldToScreenPoint(transform.position);
         offset = transform.position - Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, screenPoint.z));
 
@@ -80,9 +112,10 @@ public class Connector : MonoBehaviour
 
         transform.position = roundedPosition;
 
-        var positionString = rows[(int)transform.position.y] + columns[(int)transform.position.x];
-        Debug.Log(positionString + " " + transform.position);
-
-        CurrentlyConnectedTo = positionString;
+        if (roundedPosition != Source.position)
+        {
+            var positionString = rows[(int)transform.position.y] + columns[(int)transform.position.x];
+            CurrentlyConnectedTo = Manager.callersDictionary[positionString];
+        }
     }
 }
