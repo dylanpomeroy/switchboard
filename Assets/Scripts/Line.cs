@@ -19,18 +19,26 @@ public class Line : MonoBehaviour
         ReceiverConnected,
         LineSwitchOff,
         CallCompleted,
+        CallCleanup,
     }
 
     private void Update()
     {
         var connectedCaller0 = Connector0.CurrentlyConnectedTo;
+
         var connectedCaller1 = Connector1.CurrentlyConnectedTo;
+
+        var connectedCaller0IsCaller = connectedCaller0?.RequestedReceiver != null;
+        var connectedCaller0IsReceiver = connectedCaller1?.RequestedReceiver != null;
+
+        var connectedCaller1IsCaller = connectedCaller1?.RequestedReceiver != null;
+        var connectedCaller1IsReceiver = connectedCaller0?.RequestedReceiver != null;
 
         switch (CurrentConnectionState)
         {
             case ConnectionState.Disconnected:
-                if ((connectedCaller0 != null && connectedCaller0.CallIncoming)
-                    || (connectedCaller1 != null && connectedCaller1.CallIncoming))
+                if ((connectedCaller0 != null && connectedCaller0IsCaller)
+                    || (connectedCaller1 != null && connectedCaller1IsCaller))
                 {
                     Debug.Log($"Connected first caller. Moving to CallerConnected state.");
                     CurrentConnectionState = ConnectionState.CallerConnected;
@@ -40,9 +48,15 @@ public class Line : MonoBehaviour
             case ConnectionState.CallerConnected:
                 if (connectedCaller0 == null && connectedCaller1 == null)
                 {
-                    Debug.Log("Disconnected caller before completing call. Moving to Disconnected state.");
+                    Debug.Log($"Disconnected caller before completing call. Moving to CallCleanup state.");
                     Manager.TotalScore -= 5;
-                    CurrentConnectionState = ConnectionState.Disconnected;
+                    CurrentConnectionState = ConnectionState.CallCleanup;
+                }
+                else if (connectedCaller0IsCaller && connectedCaller1IsCaller)
+                {
+                    Debug.Log($"Connected two callers both requesting someone else. Moving to CallCleanup state.");
+                    Manager.TotalScore -= 5;
+                    CurrentConnectionState = ConnectionState.CallCleanup;
                 }
                 else if (LineSwitch.OnState)
                 {
@@ -52,29 +66,43 @@ public class Line : MonoBehaviour
                 break;
 
             case ConnectionState.LineSwitchOn:
-                Debug.Log($"Requested caller at {connectedCaller0?.RequestedReceiver?.gameObject.name ?? connectedCaller1?.RequestedReceiver?.gameObject.name ?? "error"}");
                 if (connectedCaller0 == null && connectedCaller1 == null)
                 {
-                    Debug.Log("Disconnected caller before completing call. Moving to Disconnected state.");
+                    Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
                     Manager.TotalScore -= 5;
-                    CurrentConnectionState = ConnectionState.Disconnected;
+                    CurrentConnectionState = ConnectionState.CallCleanup;
+                }
+                else if (connectedCaller0IsCaller && connectedCaller1IsCaller)
+                {
+                    Debug.Log($"Connected two callers both requesting someone else. Moving to CallCleanup state.");
+                    Manager.TotalScore -= 5;
+                    CurrentConnectionState = ConnectionState.CallCleanup;
+                }
+                else
+                {
+                    if ((connectedCaller0 != null & connectedCaller1 != null)
+                    && ((connectedCaller0IsCaller && connectedCaller0.RequestedReceiver == connectedCaller1)
+                        || (connectedCaller1IsCaller && connectedCaller1.RequestedReceiver == connectedCaller0)))
+                    {
+                        Debug.Log($"Both callers connected. Moving to ReceiverConnected state.");
+                        CurrentConnectionState = ConnectionState.ReceiverConnected;
+                    }
+                    else
+                    {
+                        var requestedCaller = connectedCaller0IsCaller ? connectedCaller0.RequestedReceiver.gameObject.name
+                            : connectedCaller1.RequestedReceiver.gameObject.name;
+                                Debug.Log($"Requested caller at {requestedCaller}");
+                    }
                 }
 
-                if ((connectedCaller0 != null && connectedCaller1 != null)
-                    && ((connectedCaller0.RequestedReceiver != null && connectedCaller0.RequestedReceiver == connectedCaller1)
-                        || (connectedCaller1.RequestedReceiver != null && connectedCaller1.RequestedReceiver == connectedCaller0)))
-                {
-                    Debug.Log($"Both callers connected. Moving to ReceiverConnected state.");
-                    CurrentConnectionState = ConnectionState.ReceiverConnected;
-                }
                 break;
 
             case ConnectionState.ReceiverConnected:
                 if (connectedCaller0 == null || connectedCaller1 == null)
                 {
-                    Debug.Log("Disconnected caller before completing call. Moving to Disconnected state.");
+                    Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
                     Manager.TotalScore -= 5;
-                    CurrentConnectionState = ConnectionState.Disconnected;
+                    CurrentConnectionState = ConnectionState.CallCleanup;
                     break;
                 }
 
@@ -91,9 +119,9 @@ public class Line : MonoBehaviour
             case ConnectionState.LineSwitchOff:
                 if (connectedCaller0 == null || connectedCaller1 == null)
                 {
-                    Debug.Log("Disconnected caller before completing call. Moving to Disconnected state.");
+                    Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
                     Manager.TotalScore -= 5;
-                    CurrentConnectionState = ConnectionState.Disconnected;
+                    CurrentConnectionState = ConnectionState.CallCleanup;
                     break;
                 }
 
@@ -101,11 +129,28 @@ public class Line : MonoBehaviour
                 break;
 
             case ConnectionState.CallCompleted:
-                Debug.Log($"Call completed. Adding to score and setting line to disconnected.");
+                Debug.Log($"Call completed. Adding to score and moving to CallCleanup state.");
                 Manager.TotalScore += 10;
 
-                connectedCaller0.CallIncoming = false;
-                connectedCaller0.RequestedReceiver = null;
+                CurrentConnectionState = ConnectionState.CallCleanup;
+                break;
+
+            case ConnectionState.CallCleanup:
+                Debug.Log($"Call cleanup started. Restoring caller states and moving to Disconnected state.");
+
+                if (connectedCaller0 != null)
+                {
+                    connectedCaller0.CallIncoming = false;
+                    connectedCaller0.RequestedReceiver = null;
+                    connectedCaller0.canHaveCall = true;
+                }
+                
+                if (connectedCaller1 != null)
+                {
+                    connectedCaller1.CallIncoming = false;
+                    connectedCaller1.RequestedReceiver = null;
+                    connectedCaller1.canHaveCall = true;
+                }
 
                 CurrentConnectionState = ConnectionState.Disconnected;
                 break;
@@ -119,12 +164,14 @@ public class Line : MonoBehaviour
             return;
 
         callRunning = true;
-        await Task.Delay(Random.Range(5000, 10000));
+        var randomMillisecondCallDuration = Random.Range(5000, 10000);
+        Debug.Log($"Call will run for {randomMillisecondCallDuration / 1000} seconds");
+        await Task.Delay(randomMillisecondCallDuration);
 
+        callRunning = false;
         if (CurrentConnectionState != ConnectionState.LineSwitchOff)
         {
             // got disconnected while waiting, should not set call completed
-            callRunning = false;
             return;
         }
 

@@ -21,6 +21,7 @@ public class Manager : MonoBehaviour
         {
             var callerTransform = ConnectionObject.GetChild(i);
             callersDictionary[callerTransform.name] = callerTransform.GetComponent<Caller>();
+            callersDictionary[callerTransform.name].canHaveCall = true;
 
             callerTransform.GetChild(0).GetComponent<IndicatorLight>().lightState = 2;
         }
@@ -45,17 +46,38 @@ public class Manager : MonoBehaviour
 
     private void InvokeIncomingCall()
     {
+        var randomAttempts = 0;
+
         Debug.Log("Invoking call.");
         var randomIndex = Random.Range(0, callersList.Count);
-        var randomCaller = callersList[randomIndex];
 
-        var callerIndex = randomIndex;
-        while (randomIndex == callerIndex)
+        while (!callersList[randomIndex].canHaveCall && randomAttempts < 100)
         {
             randomIndex = Random.Range(0, callersList.Count);
+            randomAttempts++;
+
+            if (randomAttempts >= 100)
+                return; // don't try forever
+        }
+
+        var randomCaller = callersList[randomIndex];
+        randomCaller.canHaveCall = false;
+
+        var callerIndex = randomIndex;
+        while (!callersList[randomIndex].canHaveCall)
+        {
+            randomIndex = Random.Range(0, callersList.Count);
+            randomAttempts++;
+
+            if (randomAttempts >= 100)
+            {
+                randomCaller.canHaveCall = true;
+                return; // don't try forever
+            }
         }
 
         var randomReceiver = callersList[randomIndex];
+        randomReceiver.canHaveCall = false;
 
         randomCaller.CallIncoming = true;
         randomCaller.RequestedReceiver = randomReceiver;

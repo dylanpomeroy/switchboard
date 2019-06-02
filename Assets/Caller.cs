@@ -13,7 +13,7 @@ public class Caller : MonoBehaviour
         set
         {
             callIncoming = value;
-            IndicatorLight.lightState = 1;
+            IndicatorLight.lightState = callIncoming ? 1 : 2;
         }
     }
 
@@ -22,7 +22,9 @@ public class Caller : MonoBehaviour
     public Caller RequestedReceiver;
 
     public IndicatorLight IndicatorLight;
-    
+
+    public bool canHaveCall;
+
     public Line ConnectedLine {
         get
         {
