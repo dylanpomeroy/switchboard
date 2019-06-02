@@ -13,8 +13,6 @@ public class LineSwitch : MonoBehaviour
         set
         {
             onState = value;
-
-
         }
     }
 

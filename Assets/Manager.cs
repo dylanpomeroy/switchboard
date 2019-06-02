@@ -48,7 +48,7 @@ public class Manager : MonoBehaviour
     {
         var randomAttempts = 0;
 
-        Debug.Log("Invoking call.");
+        //Debug.Log("Invoking call.");
         var randomIndex = Random.Range(0, callersList.Count);
 
         while (!callersList[randomIndex].canHaveCall && randomAttempts < 100)

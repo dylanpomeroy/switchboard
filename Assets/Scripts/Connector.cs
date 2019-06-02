@@ -50,7 +50,6 @@ public class Connector : MonoBehaviour
                 currentlyConnectedTo.RequestedReceiver = null;
             }
             
-
             currentlyConnectedTo = value;
         }
     }
@@ -64,8 +63,17 @@ public class Connector : MonoBehaviour
 
     Vector3 goalRotation;
 
+    private Rigidbody rigidBodyComponent;
+
+    private void Start()
+    {
+        rigidBodyComponent = GetComponent<Rigidbody>();
+    }
+
     private void OnMouseDown()
     {
+        rigidBodyComponent.isKinematic = true;
+
         if (CurrentlyConnectedTo != null)
         {
             CurrentlyConnectedTo.ConnectedLine = null;
@@ -91,6 +99,15 @@ public class Connector : MonoBehaviour
             Mathf.Max(Mathf.Min(cursorPosition.y, TopBorder), BottomBorder),
             cursorPosition.z);
         transform.position = cursorPosition;
+
+        if (transform.localPosition.y < 0)
+        {
+            transform.rotation = Quaternion.Euler(90, 0, 0);
+        }
+        else
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
     }
 
     private void OnMouseUp()
@@ -103,19 +120,26 @@ public class Connector : MonoBehaviour
         if (roundedPosition.y == -3)
         {
             roundedPosition = Source.position;
-            transform.Rotate(new Vector3(90, 0, 0));
         }
         else
         {
             roundedPosition = new Vector3(roundedPosition.x, roundedPosition.y, 0);
         }
 
-        transform.position = roundedPosition;
-
         if (roundedPosition != Source.position)
         {
-            var positionString = rows[(int)transform.position.y] + columns[(int)transform.position.x];
-            CurrentlyConnectedTo = Manager.callersDictionary[positionString];
+            var positionString = rows[(int)roundedPosition.y] + columns[(int)roundedPosition.x];
+
+            if (Manager.callersDictionary[positionString].ConnectedLine != null)
+            {
+                rigidBodyComponent.isKinematic = false;
+            }
+            else
+            {
+                CurrentlyConnectedTo = Manager.callersDictionary[positionString];
+            }
         }
+
+        transform.position = roundedPosition;
     }
 }

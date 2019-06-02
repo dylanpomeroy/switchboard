@@ -37,6 +37,8 @@ public class Line : MonoBehaviour
         switch (CurrentConnectionState)
         {
             case ConnectionState.Disconnected:
+                IndicatorLight.lightState = 2;
+
                 if ((connectedCaller0 != null && connectedCaller0IsCaller)
                     || (connectedCaller1 != null && connectedCaller1IsCaller))
                 {
@@ -46,6 +48,7 @@ public class Line : MonoBehaviour
                 break;
 
             case ConnectionState.CallerConnected:
+                IndicatorLight.lightState = 1;
                 if (connectedCaller0 == null && connectedCaller1 == null)
                 {
                     Debug.Log($"Disconnected caller before completing call. Moving to CallCleanup state.");
@@ -117,6 +120,8 @@ public class Line : MonoBehaviour
                 break;
 
             case ConnectionState.LineSwitchOff:
+                IndicatorLight.lightState = 0;
+
                 if (connectedCaller0 == null || connectedCaller1 == null)
                 {
                     Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
@@ -151,6 +156,8 @@ public class Line : MonoBehaviour
                     connectedCaller1.RequestedReceiver = null;
                     connectedCaller1.canHaveCall = true;
                 }
+
+                IndicatorLight.lightState = 2;
 
                 CurrentConnectionState = ConnectionState.Disconnected;
                 break;
