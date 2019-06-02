@@ -7,19 +7,19 @@ public class Connector : MonoBehaviour
 {
     private Dictionary<int, string> rows = new Dictionary<int, string>
     {
-        { 2, "A" },
-        { 1, "B" },
-        { 0, "C" },
-        { -1, "D" },
-        { -2, "E" },
+        { 2, "4" },
+        { 1, "3" },
+        { 0, "2" },
+        { -1, "1" },
+        { -2, "0" },
     };
 
     private Dictionary<int, string> columns = new Dictionary<int, string>
     {
-        { 2, "1" },
-        { 1, "2" },
-        { 0, "3" },
-        { -1, "4" },
+        { 2, "9" },
+        { 1, "8" },
+        { 0, "7" },
+        { -1, "6" },
         { -2, "5" },
     };
 
@@ -40,7 +40,7 @@ public class Connector : MonoBehaviour
         {
             if (value != null)
             {
-                Debug.Log($"Line connected to caller: {currentlyConnectedTo}");
+                Debug.Log($"Line connected to caller: {value.name}");
                 value.ConnectedLine = LineParent;
             }
             else
