@@ -27,6 +27,8 @@ public class Caller : MonoBehaviour
 
     private bool callIncoming;
 
+    public bool OverrideCallRequestedTimeout { get; set; }
+
     public Caller RequestedReceiver;
 
     public IndicatorLight IndicatorLight;
@@ -62,6 +64,9 @@ public class Caller : MonoBehaviour
     {
         timeBetweenBlinks = 1000;
         BlinkLight();
+
+        if (OverrideCallRequestedTimeout)
+            return;
 
         await Task.Delay(10000);
         if (ConnectedLine != null) return;

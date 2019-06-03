@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Manager : MonoBehaviour
 {
@@ -28,7 +29,11 @@ public class Manager : MonoBehaviour
 
         callersList = callersDictionary.Select(kvp => kvp.Value).ToList();
 
-        StartCallCycle();
+        if (SceneManager.GetActiveScene().name == "Main")
+            StartCallCycle();
+        else
+            Debug.Log("Manager script detected this is not the main scene." +
+                " Will not start the call cycle but will instead let TutotorialManager lead.");
     }
 
     private bool stopCallCycle;

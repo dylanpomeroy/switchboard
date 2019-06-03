@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Line : MonoBehaviour
 {
@@ -178,6 +179,9 @@ public class Line : MonoBehaviour
 
         callRunning = true;
         var randomMillisecondCallDuration = Random.Range(10000, 30000);
+        if (SceneManager.GetActiveScene().name != "Main")
+            randomMillisecondCallDuration = 4000;
+
         Debug.Log($"Call will run for {randomMillisecondCallDuration / 1000} seconds");
         await Task.Delay(randomMillisecondCallDuration);
 
