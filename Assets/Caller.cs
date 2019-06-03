@@ -1,9 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class Caller : MonoBehaviour
 {
+    public AudioClip ErrorClip;
+    private AudioSource audioSourceComponent;
+
     public bool CallIncoming
     {
         get
@@ -13,7 +17,11 @@ public class Caller : MonoBehaviour
         set
         {
             callIncoming = value;
-            IndicatorLight.lightState = callIncoming ? 1 : 2;
+
+            if (callIncoming)
+                CountdownCallRequest();
+            else
+                IndicatorLight.lightState = 2;
         }
     }
 
@@ -44,4 +52,54 @@ public class Caller : MonoBehaviour
     }
 
     private Line connectedLine;
+
+    private void Start()
+    {
+        audioSourceComponent = GetComponent<AudioSource>();
+    }
+
+    private async void CountdownCallRequest()
+    {
+        timeBetweenBlinks = 1000;
+        BlinkLight();
+
+        await Task.Delay(10000);
+        if (ConnectedLine != null) return;
+        timeBetweenBlinks = 500;
+
+        await Task.Delay(10000);
+        if (ConnectedLine != null) return;
+        timeBetweenBlinks = 200;
+
+        await Task.Delay(10000);
+        if (ConnectedLine != null) return;
+        timeBetweenBlinks = -1;
+        Manager.TotalScore -= 5;
+        audioSourceComponent.PlayOneShot(ErrorClip);
+        CallIncoming = false;
+    }
+
+    private int timeBetweenBlinks;
+    private async void BlinkLight()
+    {
+        while (timeBetweenBlinks != -1)
+        {
+            IndicatorLight.lightState = 1;
+
+            await Task.Delay(timeBetweenBlinks);
+            if (ConnectedLine != null)
+            {
+                timeBetweenBlinks = -1;
+                return;
+            }
+            IndicatorLight.lightState = 2;
+
+            await Task.Delay(timeBetweenBlinks);
+            if (ConnectedLine != null)
+            {
+                timeBetweenBlinks = -1;
+                return;
+            }
+        }
+    }
 }

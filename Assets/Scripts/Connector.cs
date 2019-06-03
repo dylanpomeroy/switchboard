@@ -30,6 +30,10 @@ public class Connector : MonoBehaviour
     [SerializeField] float TopBorder;
     [SerializeField] float BottomBorder;
 
+    [SerializeField] AudioClip PlugInClip;
+
+    private AudioSource audioSourceComponent;
+
     public Caller CurrentlyConnectedTo
     {
         get
@@ -71,6 +75,8 @@ public class Connector : MonoBehaviour
 
         transform.position = Source.position;
         transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        audioSourceComponent = GetComponent<AudioSource>();
     }
 
     private void OnMouseDown()
@@ -79,6 +85,7 @@ public class Connector : MonoBehaviour
 
         if (CurrentlyConnectedTo != null)
         {
+            audioSourceComponent.PlayOneShot(PlugInClip);
             CurrentlyConnectedTo.ConnectedLine = null;
             CurrentlyConnectedTo = null;
         }
@@ -134,6 +141,7 @@ public class Connector : MonoBehaviour
             }
             else
             {
+                audioSourceComponent.PlayOneShot(PlugInClip);
                 CurrentlyConnectedTo = Manager.callersDictionary[positionString];
             }
         }

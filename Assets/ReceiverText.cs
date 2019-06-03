@@ -43,6 +43,11 @@ public class ReceiverText : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        writingDots = false;
+    }
+
     private bool writingDots;
     private async void WriteDots()
     {

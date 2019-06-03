@@ -31,6 +31,7 @@ public class Manager : MonoBehaviour
         StartCallCycle();
     }
 
+    private bool stopCallCycle;
     private async void StartCallCycle()
     {
         InvokeIncomingCall();
@@ -40,6 +41,7 @@ public class Manager : MonoBehaviour
             var randomWaitTime = Random.Range(5000, 15000);
             await Task.Delay(randomWaitTime);
 
+            if (stopCallCycle) break;
             InvokeIncomingCall();
         }
     }
@@ -81,5 +83,10 @@ public class Manager : MonoBehaviour
 
         randomCaller.CallIncoming = true;
         randomCaller.RequestedReceiver = randomReceiver;
+    }
+
+    private void OnApplicationQuit()
+    {
+        stopCallCycle = true;
     }
 }

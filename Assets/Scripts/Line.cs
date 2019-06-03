@@ -10,6 +10,10 @@ public class Line : MonoBehaviour
     public Connector Connector0;
     public Connector Connector1;
 
+    public AudioClip ErrorClip;
+    public AudioClip SuccessClip;
+    private AudioSource audioSourceComponent;
+
     public ConnectionState CurrentConnectionState;
     public enum ConnectionState
     {
@@ -20,6 +24,11 @@ public class Line : MonoBehaviour
         LineSwitchOff,
         CallCompleted,
         CallCleanup,
+    }
+
+    private void Start()
+    {
+        audioSourceComponent = GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -52,6 +61,7 @@ public class Line : MonoBehaviour
                 if (connectedCaller0 == null && connectedCaller1 == null)
                 {
                     Debug.Log($"Disconnected caller before completing call. Moving to CallCleanup state.");
+                    audioSourceComponent.PlayOneShot(ErrorClip, 1.5f);
                     Manager.TotalScore -= 5;
                     CurrentConnectionState = ConnectionState.CallCleanup;
                 }
@@ -72,12 +82,14 @@ public class Line : MonoBehaviour
                 if (connectedCaller0 == null && connectedCaller1 == null)
                 {
                     Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
+                    audioSourceComponent.PlayOneShot(ErrorClip, 1.5f);
                     Manager.TotalScore -= 5;
                     CurrentConnectionState = ConnectionState.CallCleanup;
                 }
                 else if (connectedCaller0IsCaller && connectedCaller1IsCaller)
                 {
                     Debug.Log($"Connected two callers both requesting someone else. Moving to CallCleanup state.");
+                    audioSourceComponent.PlayOneShot(ErrorClip, 1.5f);
                     Manager.TotalScore -= 5;
                     CurrentConnectionState = ConnectionState.CallCleanup;
                 }
@@ -95,6 +107,7 @@ public class Line : MonoBehaviour
                 if (connectedCaller0 == null || connectedCaller1 == null)
                 {
                     Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
+                    audioSourceComponent.PlayOneShot(ErrorClip, 1.5f);
                     Manager.TotalScore -= 5;
                     CurrentConnectionState = ConnectionState.CallCleanup;
                     break;
@@ -116,6 +129,7 @@ public class Line : MonoBehaviour
                 if (connectedCaller0 == null || connectedCaller1 == null)
                 {
                     Debug.Log("Disconnected caller before completing call. Moving to CallCleanup state.");
+                    audioSourceComponent.PlayOneShot(ErrorClip, 1.5f);
                     Manager.TotalScore -= 5;
                     CurrentConnectionState = ConnectionState.CallCleanup;
                     break;
@@ -127,6 +141,7 @@ public class Line : MonoBehaviour
             case ConnectionState.CallCompleted:
                 Debug.Log($"Call completed. Adding to score and moving to CallCleanup state.");
                 Manager.TotalScore += 10;
+                audioSourceComponent.PlayOneShot(SuccessClip);
 
                 CurrentConnectionState = ConnectionState.CallCleanup;
                 break;
@@ -162,7 +177,7 @@ public class Line : MonoBehaviour
             return;
 
         callRunning = true;
-        var randomMillisecondCallDuration = Random.Range(5000, 10000);
+        var randomMillisecondCallDuration = Random.Range(10000, 30000);
         Debug.Log($"Call will run for {randomMillisecondCallDuration / 1000} seconds");
         await Task.Delay(randomMillisecondCallDuration);
 

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class LineSwitch : MonoBehaviour
 {
+    [SerializeField] AudioClip SwitchClip;
+    private AudioSource audioSourceComponent;
+
     public bool OnState
     {
         get
@@ -12,11 +15,18 @@ public class LineSwitch : MonoBehaviour
         }
         set
         {
+            if (onState != value)
+                audioSourceComponent.PlayOneShot(SwitchClip);
             onState = value;
         }
     }
 
     private bool onState;
+
+    private void Start()
+    {
+        audioSourceComponent = GetComponent<AudioSource>();
+    }
 
     private void OnMouseDown()
     {

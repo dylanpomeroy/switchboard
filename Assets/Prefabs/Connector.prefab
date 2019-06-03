@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 3624918834770639313}
   - component: {fileID: 1933908740}
   - component: {fileID: 1933908739}
+  - component: {fileID: 1222575816208783871}
   m_Layer: 0
   m_Name: Connector
   m_TagString: Untagged
@@ -70,6 +71,103 @@ MonoBehaviour:
   RightBorder: -2
   TopBorder: 2
   BottomBorder: -3
+  PlugInClip: {fileID: 8300000, guid: 1941a7002e5800946a6370dbce1c8cfd, type: 3}
+--- !u!82 &1222575816208783871
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 917574132271764259}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1508525209340615388
 GameObject:
   m_ObjectHideFlags: 0
@@ -141,24 +239,24 @@ LineRenderer:
   m_SortingOrder: 0
   m_Positions:
   - {x: -4.1048236, y: -1.3043853, z: -0.78572917}
-  - {x: -4.1212573, y: -1.3004704, z: -0.78454924}
-  - {x: -4.1372423, y: -1.2966621, z: -0.7834015}
-  - {x: -4.1523433, y: -1.2930646, z: -0.7823172}
-  - {x: -4.166148, y: -1.2897758, z: -0.78132606}
-  - {x: -4.17828, y: -1.2868857, z: -0.780455}
-  - {x: -4.1884084, y: -1.2844728, z: -0.77972776}
-  - {x: -4.1962566, y: -1.2826031, z: -0.77916425}
-  - {x: -4.2016106, y: -1.2813276, z: -0.7787798}
-  - {x: -4.2043247, y: -1.280681, z: -0.77858496}
-  - {x: -4.2043247, y: -1.280681, z: -0.77858496}
-  - {x: -4.2016106, y: -1.2813276, z: -0.7787798}
-  - {x: -4.1962566, y: -1.2826031, z: -0.77916425}
-  - {x: -4.1884084, y: -1.2844728, z: -0.77972776}
-  - {x: -4.17828, y: -1.2868857, z: -0.780455}
-  - {x: -4.166148, y: -1.2897758, z: -0.78132606}
-  - {x: -4.1523433, y: -1.2930646, z: -0.7823172}
-  - {x: -4.1372423, y: -1.2966621, z: -0.7834015}
-  - {x: -4.1212573, y: -1.3004704, z: -0.78454924}
+  - {x: -4.1209865, y: -1.3007267, z: -0.7846265}
+  - {x: -4.1367087, y: -1.2971679, z: -0.7835539}
+  - {x: -4.1515613, y: -1.293806, z: -0.7825407}
+  - {x: -4.1651387, y: -1.2907326, z: -0.78161436}
+  - {x: -4.177071, y: -1.2880317, z: -0.78080034}
+  - {x: -4.1870327, y: -1.2857767, z: -0.7801208}
+  - {x: -4.1947517, y: -1.2840295, z: -0.7795942}
+  - {x: -4.200018, y: -1.2828375, z: -0.7792349}
+  - {x: -4.2026877, y: -1.2822332, z: -0.7790528}
+  - {x: -4.2026877, y: -1.2822332, z: -0.7790528}
+  - {x: -4.200018, y: -1.2828375, z: -0.7792349}
+  - {x: -4.1947517, y: -1.2840295, z: -0.7795942}
+  - {x: -4.1870327, y: -1.2857767, z: -0.7801208}
+  - {x: -4.177071, y: -1.2880317, z: -0.78080034}
+  - {x: -4.1651387, y: -1.2907326, z: -0.7816144}
+  - {x: -4.1515613, y: -1.293806, z: -0.7825407}
+  - {x: -4.1367087, y: -1.2971679, z: -0.7835539}
+  - {x: -4.1209865, y: -1.3007267, z: -0.7846265}
   - {x: -4.1048236, y: -1.3043853, z: -0.78572917}
   m_Parameters:
     serializedVersion: 3
