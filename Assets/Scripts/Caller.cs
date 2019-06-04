@@ -79,7 +79,8 @@ public class Caller : MonoBehaviour
         await Task.Delay(10000);
         if (ConnectedLine != null) return;
         timeBetweenBlinks = -1;
-        Manager.TotalScore -= 5;
+
+        if (Manager.LoseLifeOnTimeout) Manager.Lives--;
         audioSourceComponent.PlayOneShot(ErrorClip);
         CallIncoming = false;
     }

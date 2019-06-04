@@ -14,8 +14,52 @@ public class Manager : MonoBehaviour
     public static Dictionary<string, Caller> callersDictionary;
     private static List<Caller> callersList;
 
+    public static GameObject GameOverPanel;
+
+    public static bool LoseLifeOnTimeout { get; set; }
+
+    public static int Lives
+    {
+        get
+        {
+            return lives;
+        }
+        set
+        {
+            lives = value;
+            if (lives == 0)
+            {
+                DisplayGameOver();
+            }
+        }
+    }
+    private static int lives;
+
+    private static void DisplayGameOver()
+    {
+        Time.timeScale = 0;
+        GameOverPanel.SetActive(true);
+    }
+
+    public void BackToTitle()
+    {
+        SceneManager.LoadScene("Title");
+    }
+
+    public void Restart()
+    {
+        var sceneName = SceneManager.GetActiveScene().name;
+        SceneManager.LoadScene(sceneName);
+    }
+
     private void Start()
     {
+        if (GameObject.Find("GameOverPanel") != null)
+        {
+            GameOverPanel = GameObject.Find("GameOverPanel");
+            GameOverPanel.SetActive(false);
+        }
+        
         callersDictionary = new Dictionary<string, Caller>();
         
         for (var i = 0; i < ConnectionObject.childCount; i++)
@@ -29,21 +73,36 @@ public class Manager : MonoBehaviour
 
         callersList = callersDictionary.Select(kvp => kvp.Value).ToList();
 
-        if (SceneManager.GetActiveScene().name == "Main")
-            StartCallCycle();
+        if (SceneManager.GetActiveScene().name == "MainPracticeMode")
+        {
+            StartCallCycle(10000, 20000, false);
+        }
+        else if (SceneManager.GetActiveScene().name == "MainEasyMode")
+        {
+            StartCallCycle(15000, 30000, true);
+        }
+        else if (SceneManager.GetActiveScene().name == "MainHardMode")
+        {
+            StartCallCycle(5000, 10000, true);
+        }
         else
+        {
             Debug.Log("Manager script detected this is not the main scene." +
                 " Will not start the call cycle but will instead let TutotorialManager lead.");
+        }
     }
 
     private bool stopCallCycle;
-    private async void StartCallCycle()
+    private async void StartCallCycle(int minimumTimeBetweenCalls, int maximumTimeBetweenCalls, bool loseHealthOnTimeout)
     {
+        Lives = 3;
+        LoseLifeOnTimeout = loseHealthOnTimeout;
+
         InvokeIncomingCall();
 
         while (true)
         {
-            var randomWaitTime = Random.Range(5000, 15000);
+            var randomWaitTime = Random.Range(minimumTimeBetweenCalls, maximumTimeBetweenCalls);
             await Task.Delay(randomWaitTime);
 
             if (stopCallCycle) break;
@@ -55,7 +114,6 @@ public class Manager : MonoBehaviour
     {
         var randomAttempts = 0;
 
-        //Debug.Log("Invoking call.");
         var randomIndex = Random.Range(0, callersList.Count);
 
         while (!callersList[randomIndex].canHaveCall && randomAttempts < 100)

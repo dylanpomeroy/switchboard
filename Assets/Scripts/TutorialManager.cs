@@ -152,12 +152,12 @@ public class TutorialManager : MonoBehaviour
 
         DarkPanel.SetActive(true);
         HelpPanels[9].SetActive(true);
-        Highlights["Line0Switch"].SetActive(true);
+        Highlights["Line0SecondConnector"].SetActive(true);
     }
 
     public async void Help9Closed()
     {
-        Highlights["Line0Switch"].SetActive(false);
+        Highlights["Line0SecondConnector"].SetActive(false);
         HelpPanels[9].SetActive(false);
         DarkPanel.SetActive(false);
 
@@ -177,6 +177,11 @@ public class TutorialManager : MonoBehaviour
     {
         HelpPanels[10].SetActive(false);
         DarkPanel.SetActive(false);
+
+        while (callersDictionary["26"].ConnectedLine.LineSwitch.OnState)
+        {
+            await Task.Delay(100);
+        }
 
         await Task.Delay(5000);
 
